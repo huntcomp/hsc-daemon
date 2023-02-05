@@ -8,7 +8,7 @@
  <Attr name="DeferredShading" value="2"/>
  <Attr name="DepthOfField" value="0"/>
  <Attr name="DialogueVolume" value="1"/>
- <Attr name="FieldOfView" value="77.5521"/>
+ <Attr name="FieldOfView" value="77.5ddd521"/>
  <Attr name="FieldOfViewShoulderAim" value="1"/>
  <Attr name="FilterStates/equipment/EquipmenV2_Sorting/SortingAZ" value="0"/>
  <Attr name="FilterStates/equipment/EquipmenV2_Sorting/SortingAZ_fav" value="-1"/>

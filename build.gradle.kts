@@ -1,3 +1,7 @@
+// For `KotlinCompile` task below
+//import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+//import sun.awt.FontConfiguration.verbose
+
 // build.gradle.kts
 object Versions {
     const val KOTLINX = "1.6.4"
@@ -8,100 +12,51 @@ object Versions {
     const val KOTEST = "5.5.4"
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-}
-
-
 plugins {
-    kotlin("multiplatform") version "1.8.0"
-    id("io.kotest.multiplatform") version "5.5.4"
-    kotlin("plugin.serialization") version "1.8.0"
+
+    kotlin("jvm") version "1.8.10" // Kotlin version to use
+    application // Application plugin. Also see 1️⃣ below the code
+//    id("com.github.johnrengelman.shadow") version "6.0.0"
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        maven("https://jitpack.io")
-    }
+group = "app.hsc" // A company name, for example, `org.jetbrains`
+version = "0.0-SNAPSHOT" // Version to assign to the built artifact
 
-
+repositories { // Sources of dependencies. See 2️⃣
+    mavenCentral()
+    mavenLocal()
+    maven("https://jitpack.io")// Maven Central Repository. See 3️⃣
 }
 
-kotlin {
-    targets {
-        jvm {
-            compilations.all {
-                kotlinOptions {
-                    jvmTarget = "11"
-                }
-            }
-        }
-    }
-
-
-    targets.all {
-        compilations.all {
-            kotlinOptions {
-                verbose = true
-            }
-        }
-    }
-
-    sourceSets {
-
-
-
-        val jvmMain by getting {
-            dependencies {
-                implementation("io.kotest:kotest-assertions-core:${Versions.KOTEST}")
-                implementation("io.kotest:kotest-framework-engine:${Versions.KOTEST}")
-                implementation("io.kotest:kotest-property:${Versions.KOTEST}")
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation("io.github.jan-tennert.supabase:postgrest-kt:${Versions.SUPABASE}")
-                implementation("io.github.jan-tennert.supabase:gotrue-kt:${Versions.SUPABASE}")
-                implementation("io.github.jan-tennert.supabase:functions-kt:${Versions.SUPABASE}")
-                implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
-                implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
-                implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
-                implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
-                implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
-                implementation ("org.awaitility:awaitility:4.2.0")
-            }
-
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation("io.kotest:kotest-runner-junit5-jvm:${Versions.KOTEST}")
-            }
-
-        }
-
-
-    }
-
-
-
+dependencies { // All the libraries you want to use. See 4️⃣
+    // Copy dependencies' names after you find them in a repository
+    implementation("io.kotest:kotest-assertions-core:${Versions.KOTEST}")
+    implementation("io.kotest:kotest-framework-engine:${Versions.KOTEST}")
+    implementation("io.kotest:kotest-property:${Versions.KOTEST}")
+    implementation(kotlin("test-common"))
+    implementation(kotlin("test-annotations-common"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${Versions.SUPABASE}")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:${Versions.SUPABASE}")
+    implementation("io.github.jan-tennert.supabase:functions-kt:${Versions.SUPABASE}")
+    implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
+    implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
+    implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
+    implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
+    implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
+    implementation ("org.awaitility:awaitility:4.2.0")
+    testImplementation(kotlin("test")) // The Kotlin test library
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        apiVersion = "1.5"
-    }
-}
-
-
-tasks.withType<Wrapper> {
-    gradleVersion = "7.6"
-    distributionType = Wrapper.DistributionType.BIN
+tasks.jar {
+    manifest.attributes["Main-Class"] = "app.hsc.Main"
+    val dependencies = configurations
+        .runtimeClasspath
+        .get()
+        .map(::zipTree) // OR .map { zipTree(it) }
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.withType<Test> {
@@ -119,3 +74,22 @@ tasks.withType<Test> {
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 }
+
+kotlin { // Extension for easy setup
+    jvmToolchain(11 )// Target version of generated JVM bytecode. See 7️⃣
+}
+
+application {
+
+    mainClass.set("hsc.app.Main") // The main class of the application
+}
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+///////////////////////
