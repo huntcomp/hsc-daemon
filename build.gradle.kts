@@ -1,5 +1,10 @@
 // build.gradle.kts
 object Versions {
+    const val KOTLINX = "1.6.4"
+    const val KOTLINX_SERIALIZATION_JSON = "1.4.1"
+    const val SLF4J = "2.0.3"
+    const val SUPABASE = "0.8.0-alpha-1"
+    const val KTOR = "2.2.3"
     const val KOTEST = "5.5.4"
 }
 
@@ -14,12 +19,14 @@ buildscript {
 plugins {
     kotlin("multiplatform") version "1.8.0"
     id("io.kotest.multiplatform") version "5.5.4"
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven("https://jitpack.io")
     }
 
 
@@ -30,13 +37,8 @@ kotlin {
         jvm {
             compilations.all {
                 kotlinOptions {
-                    jvmTarget = "1.8"
+                    jvmTarget = "11"
                 }
-            }
-        }
-        linuxX64() {
-            binaries {
-                executable()
             }
         }
     }
@@ -51,22 +53,39 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+
+
+
+        val jvmMain by getting {
             dependencies {
                 implementation("io.kotest:kotest-assertions-core:${Versions.KOTEST}")
                 implementation("io.kotest:kotest-framework-engine:${Versions.KOTEST}")
                 implementation("io.kotest:kotest-property:${Versions.KOTEST}")
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("io.github.jan-tennert.supabase:postgrest-kt:${Versions.SUPABASE}")
+                implementation("io.github.jan-tennert.supabase:gotrue-kt:${Versions.SUPABASE}")
+                implementation("io.github.jan-tennert.supabase:functions-kt:${Versions.SUPABASE}")
+                implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
+                implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
+                implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
+                implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
+                implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
+                implementation ("org.awaitility:awaitility:4.2.0")
             }
 
-            val jvmTest by getting {
-                dependencies {
-                    implementation("io.kotest:kotest-runner-junit5-jvm:${Versions.KOTEST}")
-                }
-
-            }
         }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation("io.kotest:kotest-runner-junit5-jvm:${Versions.KOTEST}")
+            }
+
+        }
+
+
     }
 
 
