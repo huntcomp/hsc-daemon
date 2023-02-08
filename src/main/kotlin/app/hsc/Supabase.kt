@@ -10,6 +10,9 @@ class Supabase(
 ) {
 
     suspend fun logIn(): SessionStatus {
+        if(context.supabase.gotrue.loadFromStorage()) {
+            return context.supabase.gotrue.sessionStatus.value
+        }
         context.supabase.gotrue.loginWith(Discord)
         return context.supabase.gotrue.sessionStatus.value
     }

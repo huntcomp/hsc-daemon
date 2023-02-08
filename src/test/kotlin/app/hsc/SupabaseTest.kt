@@ -10,7 +10,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 class SupabaseTest : FunSpec({
 
-    test("connect").config(enabled = false) {
+    test("successfully logs in with discord").config{
         //given
         val context = Config().configureContext()
         val supabase = Supabase(context)

@@ -1,5 +1,6 @@
 package app.hsc
 
+import io.github.jan.supabase.gotrue.gotrue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.call.*
@@ -12,21 +13,27 @@ import java.nio.file.Path
 
 class AttributesSenderTest : FunSpec({
 
-    test("send attributes return 200") {
+    test("send attributes without logging return error") {
+
+
         //given
         val hscContext = Config().configureContext()
+        hscContext.supabase.gotrue.invalidateAllRefreshTokens()
+        hscContext.supabase.gotrue.invalidateSession()
         val sender = hscContext.sender
         val body = withContext(Dispatchers.IO) {
-            Files.readString(Path.of("/Users/tharasim/IdeaProjects/hsc-deamon/src/jvmTest/resources/attributes.xml"))
+            Files.readString(Path.of("/Users/tharasim/IdeaProjects/hsc-deamon/src/test/resources/attributes.xml"))
         }
 
         //when
-        val response = sender.sendMatch("viters","2ab6596a-422b-4144-9b60-121fc922030b", body)
+        val response = sender.sendMatch("Rumcajs", body)
 
 
         //then
+        println(response.request.headers)
+        println(response.request.url)
         println(response.toString())
-        response.status shouldBe HttpStatusCode.OK
+        response.status shouldBe HttpStatusCode.Forbidden
 
     }
 

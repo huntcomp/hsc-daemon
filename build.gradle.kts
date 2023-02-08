@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "app.hsc" // A company name, for example, `org.jetbrains`
-version = "0.0-SNAPSHOT" // Version to assign to the built artifact
+version = "0.2" // Version to assign to the built artifact
 
 repositories { // Sources of dependencies. See 2️⃣
     mavenCentral()
@@ -46,6 +46,8 @@ dependencies { // All the libraries you want to use. See 4️⃣
     implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
     implementation ("org.awaitility:awaitility:4.2.0")
+    implementation("net.java.dev.jna:jna:5.13.0")
+    implementation("net.java.dev.jna:jna-platform:5.13.0")
     testImplementation(kotlin("test")) // The Kotlin test library
 }
 
