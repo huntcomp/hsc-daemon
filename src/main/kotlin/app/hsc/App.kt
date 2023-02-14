@@ -6,19 +6,12 @@ import io.github.jan.supabase.gotrue.providers.Discord
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.DelicateCoroutinesApi
 import java.nio.file.Files
-import java.nio.file.Path
-
 
 
 class App {
     @OptIn(DelicateCoroutinesApi::class)
     fun run(args: Array<String>) {
-        if (args.isEmpty()) {
-            val message = "1 parameter: 1 - attributes.xml path, 2 - Steam name in case no registry found"
-            println(message)
-            throw RuntimeException(message)
-        }
-        val huntAttributesPath = Path.of(args[0])
+        val huntAttributesPath = AttributesPathRetriever.getHuntAttributesPath(args)
         val playerName = PlayerNameRetriever.getPlayerName(args)
         val config = Config()
         val context = config.configureContext()

@@ -15,7 +15,6 @@ class AttributesSenderTest : FunSpec({
 
     test("send attributes without logging return error") {
 
-
         //given
         val hscContext = Config().configureContext()
         hscContext.supabase.gotrue.invalidateAllRefreshTokens()
@@ -27,7 +26,6 @@ class AttributesSenderTest : FunSpec({
 
         //when
         val response = sender.sendMatch("Rumcajs", body)
-
 
         //then
         println(response.request.headers)

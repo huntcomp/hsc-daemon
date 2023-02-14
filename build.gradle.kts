@@ -1,8 +1,3 @@
-// For `KotlinCompile` task below
-//import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-//import sun.awt.FontConfiguration.verbose
-
-// build.gradle.kts
 object Versions {
     const val KOTLINX = "1.6.4"
     const val KOTLINX_SERIALIZATION_JSON = "1.4.1"
@@ -12,24 +7,23 @@ object Versions {
     const val KOTEST = "5.5.4"
 }
 
+
 plugins {
 
-    kotlin("jvm") version "1.8.10" // Kotlin version to use
-    application // Application plugin. Also see 1️⃣ below the code
-//    id("com.github.johnrengelman.shadow") version "6.0.0"
+    kotlin("jvm") version "1.8.10"
+    application
 }
 
-group = "app.hsc" // A company name, for example, `org.jetbrains`
-version = "0.2" // Version to assign to the built artifact
+group = "app.hsc"
+version = "0.5"
 
-repositories { // Sources of dependencies. See 2️⃣
+repositories {
     mavenCentral()
     mavenLocal()
-    maven("https://jitpack.io")// Maven Central Repository. See 3️⃣
+    maven("https://jitpack.io")
 }
 
-dependencies { // All the libraries you want to use. See 4️⃣
-    // Copy dependencies' names after you find them in a repository
+dependencies {
     implementation("io.kotest:kotest-assertions-core:${Versions.KOTEST}")
     implementation("io.kotest:kotest-framework-engine:${Versions.KOTEST}")
     implementation("io.kotest:kotest-property:${Versions.KOTEST}")
@@ -45,10 +39,10 @@ dependencies { // All the libraries you want to use. See 4️⃣
     implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
     implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
-    implementation ("org.awaitility:awaitility:4.2.0")
+    implementation("org.awaitility:awaitility:4.2.0")
     implementation("net.java.dev.jna:jna:5.13.0")
     implementation("net.java.dev.jna:jna-platform:5.13.0")
-    testImplementation(kotlin("test")) // The Kotlin test library
+    testImplementation(kotlin("test"))
 }
 
 tasks.jar {
@@ -56,7 +50,7 @@ tasks.jar {
     val dependencies = configurations
         .runtimeClasspath
         .get()
-        .map(::zipTree) // OR .map { zipTree(it) }
+        .map(::zipTree)
     from(dependencies)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -77,21 +71,17 @@ tasks.withType<Test> {
     }
 }
 
-kotlin { // Extension for easy setup
-    jvmToolchain(11 )// Target version of generated JVM bytecode. See 7️⃣
+kotlin {
+    jvmToolchain(11)
+
+    application {
+        mainClass.set("hsc.app.Main")
+    }
+
 }
-
-application {
-
-    mainClass.set("hsc.app.Main") // The main class of the application
-}
-
-
 buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
     }
 }
-
-///////////////////////
