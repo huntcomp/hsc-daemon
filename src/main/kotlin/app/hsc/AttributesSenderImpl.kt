@@ -15,9 +15,7 @@ class AttributesSenderImpl(
             body = body,
             headers = Headers.build {
                 append(HttpHeaders.ContentType, "application/xml")
-//                append(HttpHeaders.Authorization, "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtY2V1ZHJwZXRoaGNlc3pnYWtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQ2MDE0MDcsImV4cCI6MTk5MDE3NzQwN30.EcRogZd23__jDYyh0hSjricCJ4lqSXaV7JeQFrNZBs4")
                 append("X-Played-As", player)
-//                append("X-User", userId)
             }
         )
         println("Request: ${response.request}")
