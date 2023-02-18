@@ -1,11 +1,10 @@
 package app.hsc
 
-class Main () {
-
+class Main() {
     companion object {
-        @JvmStatic fun main(args : Array<String>) {
+        @JvmStatic
+        fun main(args: Array<String>) {
             App().run(args)
         }
     }
 }
-

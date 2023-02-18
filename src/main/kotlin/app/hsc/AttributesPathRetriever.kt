@@ -13,7 +13,6 @@ private const val INSTALL_PATH_KEY = "InstallPath"
 private const val HUNT_APP_ID = 594650
 
 object AttributesPathRetriever {
-
     private val steamDirectory = getSteamDirectory()
     private val steamLibraries = getSteamLibraries()
 
@@ -22,10 +21,10 @@ object AttributesPathRetriever {
 
     private fun getSteamAppDirectory(steamApp: Int) =
         Files.list(Path.of("$steamLibraries/steamapps/"))
-            .filter{it.name == "appmanifest_$steamApp.acf"}
+            .filter { it.name == "appmanifest_$steamApp.acf" }
             .findFirst()
-            .map {getValueFromValveFile("installdir", it)}
-            .map {"$steamLibraries/steamapps/common/$it"}
+            .map { getValueFromValveFile("installdir", it) }
+            .map { "$steamLibraries/steamapps/common/$it" }
             .orElseThrow { RuntimeException("Could not find steam libs. Is Steam installed properly") }
 
     private fun getSteamLibraries() =
@@ -39,10 +38,8 @@ object AttributesPathRetriever {
                 .firstOrNull { it.matches() }
                 ?.group("value")
                 ?: throw RuntimeException("Could not find value of key '$key' in '${valveFile.fileName}'")
-        }
-        else throw RuntimeException("Could not find valve file")
+        } else throw RuntimeException("Could not find valve file")
     }
-
 
     private fun getSteamDirectory() =
         get64BitSteamDirectory() ?: getNon64BitSteamDirectory()
@@ -72,6 +69,7 @@ object AttributesPathRetriever {
         REGISTRY_KEY_BIT,
         INSTALL_PATH_KEY
     )
+
     private fun get64BitSteamDirectory() =
         if (registry64Exists())
             get64BitSteamRegistryValue()
@@ -86,6 +84,7 @@ object AttributesPathRetriever {
             REGISTRY_KEY_64_BIT,
             INSTALL_PATH_KEY
         )
+
     private fun registryValue64BitExists() = Advapi32Util.registryValueExists(
         WinReg.HKEY_LOCAL_MACHINE,
         REGISTRY_KEY_64_BIT,
@@ -96,5 +95,4 @@ object AttributesPathRetriever {
         WinReg.HKEY_LOCAL_MACHINE,
         REGISTRY_KEY_64_BIT
     )
-
 }

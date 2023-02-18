@@ -7,7 +7,6 @@ import io.kotest.common.runBlocking
 import kotlinx.coroutines.DelicateCoroutinesApi
 import java.nio.file.Files
 
-
 class App {
     @OptIn(DelicateCoroutinesApi::class)
     fun run(args: Array<String>) {
@@ -48,6 +47,4 @@ class App {
 
         println("Finish")
     }
-
-
 }
