@@ -7,7 +7,6 @@ object Versions {
     const val KOTEST = "5.5.4"
 }
 
-
 plugins {
 
     kotlin("jvm") version "1.8.10"
@@ -15,7 +14,7 @@ plugins {
 }
 
 group = "app.hsc"
-version = "0.5"
+version = "0.6"
 
 repositories {
     mavenCentral()
