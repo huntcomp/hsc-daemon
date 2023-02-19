@@ -1,0 +1,40 @@
+package app.hsc
+
+import mu.KotlinLogging
+import java.security.MessageDigest
+import java.util.concurrent.atomic.AtomicReference
+
+object SignatureChecker {
+
+    private val logger = KotlinLogging.logger {}
+    private val signature = AtomicReference("")
+    fun isTheSame(body: String?): Boolean {
+        if (body.isNullOrEmpty()) {
+            logger.info("Empty file")
+            return true
+        }
+        val currentSignature = getSignature(body)
+        logger.info("Current signature $currentSignature")
+        if (currentSignature == signature.get()) {
+            logger.info("Signature has not been changed")
+            return true
+        }
+        logger.info("Signature has been changed")
+        signature.set(currentSignature)
+        return false
+    }
+
+    private fun getSignature(body: String): String {
+        val stringToHash = body.split(System.lineSeparator())
+            .filter { it.contains("MissionBagPlayer_") }
+            .reduce { acc, string -> acc + string }
+        return getSha256(stringToHash)
+    }
+
+    private fun getSha256(body: String): String =
+        MessageDigest.getInstance("SHA-256")
+            .digest(body.toByteArray())
+            .fold("") { str, it -> str + "%02x".format(it) }
+
+
+}

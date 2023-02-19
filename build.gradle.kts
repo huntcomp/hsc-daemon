@@ -1,7 +1,8 @@
 object Versions {
+    const val SLF4J = "2.0.6"
     const val KOTLINX = "1.6.4"
     const val KOTLINX_SERIALIZATION_JSON = "1.4.1"
-    const val SLF4J = "2.0.3"
+    const val KOTLIN_LOGGING = "3.0.5"
     const val SUPABASE = "0.8.0-alpha-1"
     const val KTOR = "2.2.3"
     const val KOTEST = "5.5.4"
@@ -35,7 +36,9 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
     implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
+    implementation("io.github.microutils:kotlin-logging:${Versions.KOTLIN_LOGGING}")
     implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
+    testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0")
     implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
     implementation("org.awaitility:awaitility:4.2.0")

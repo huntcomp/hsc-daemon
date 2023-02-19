@@ -16,7 +16,7 @@ object AttributesPathRetriever {
     private val steamDirectory = getSteamDirectory()
     private val steamLibraries = getSteamLibraries()
 
-    fun getHuntAttributesPath(args: Array<String>): Path? =
+    fun getHuntAttributesPath(args: Array<String>): Path =
         Path.of("${getSteamAppDirectory(HUNT_APP_ID)}/user/profiles/default/attributes.xml")
 
     private fun getSteamAppDirectory(steamApp: Int) =
