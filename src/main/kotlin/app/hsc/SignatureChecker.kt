@@ -8,20 +8,20 @@ object SignatureChecker {
 
     private val logger = KotlinLogging.logger {}
     private val signature = AtomicReference("")
-    fun isTheSame(body: String?): Boolean {
+    fun hasChanged(body: String?): Boolean {
         if (body.isNullOrEmpty()) {
             logger.info("Empty file")
-            return true
+            return false
         }
         val currentSignature = getSignature(body)
         logger.info("Current signature $currentSignature")
         if (currentSignature == signature.get()) {
             logger.info("Signature has not been changed")
-            return true
+            return false
         }
         logger.info("Signature has been changed")
         signature.set(currentSignature)
-        return false
+        return true
     }
 
     private fun getSignature(body: String): String {

@@ -21,11 +21,11 @@ class Config {
             install(Functions)
         }
         val sender = AttributesSenderImpl(client)
-        val tracker = FileTracker()
+//        val tracker = FileTracker()
         return HscContext(
             client,
             sender,
-            tracker
+//            tracker
         )
     }
 }

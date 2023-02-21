@@ -1,16 +1,18 @@
 package app.hsc
 
 import com.sun.jna.platform.win32.Advapi32Util.*
+import dev.vishna.watchservice.asWatchChannel
 import io.github.jan.supabase.gotrue.gotrue
 import io.github.jan.supabase.gotrue.providers.Discord
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.*
 import mu.KotlinLogging
-import org.awaitility.Awaitility
 import java.nio.file.Files
 import java.nio.file.Path
-import java.security.MessageDigest
-import java.time.Duration
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.time.Duration.Companion.seconds
 
 class App {
 
@@ -23,26 +25,37 @@ class App {
         val config = Config()
         val context = config.configureContext()
         logger.info("Start")
-        val job = GlobalScope.launch {
+        runBlocking {
             if (!context.supabase.gotrue.loadFromStorage()) {
+                logger.info("Could not load form storage -> proceeding with login with Discord")
                 context.supabase.gotrue.loginWith(Discord)
             }
-            logger.info("Start")
-            context.tracker.track(huntAttributesPath) { event ->
+            logger.info("Logged in with storage")
+        }
+        val attributesListAtomicReference = AtomicReference<List<String>>(emptyList())
+        val watchingJob = GlobalScope.launch {
+            val watchChannel = huntAttributesPath.toFile().asWatchChannel()
+            watchChannel.consumeEach { event ->
                 logger.info("File Change: ${event.kind.kind}")
                 if (event.kind.kind == "modified") {
-                    logger.info("File has been modified")
                     val body = getAttributesString(huntAttributesPath)
-                    if (SignatureChecker.isTheSame(body)) return@track
-                    runBlocking { context.sender.sendMatch(playerName, body) }
+                    if (SignatureChecker.hasChanged(body)) {
+                        attributesListAtomicReference.getAndUpdate {
+                            it + listOf(body)
+                        }
+                    }
                 }
             }
-
         }
-        Awaitility.await().forever().pollInterval(Duration.ofSeconds(5)).until {
-            job.isActive
+        while (watchingJob.isActive) {
+            runBlocking { delay(60.seconds) }
+            val attributesList = attributesListAtomicReference.getAndUpdate { emptyList() }
+            if (attributesList.isNotEmpty()) {
+                val bodyToSend = attributesList.last()
+                runBlocking { context.sender.sendMatch(playerName, bodyToSend) }
+            }
         }
-        logger.info("Finish")
+        logger.info { "Finished" }
     }
 
     private fun getAttributesString(huntAttributesPath: Path): String = runBlocking {
