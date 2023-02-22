@@ -27,9 +27,6 @@ class DiffAttributesSender(
     }
 
     private fun logBody(body: String) {
-        if(oldString.get().isEmpty()) {
-            return
-        }
         val generator = DiffRowGenerator.create()
             .showInlineDiffs(true)
             .inlineDiffByWord(true)
