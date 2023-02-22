@@ -1,5 +1,6 @@
 package app.hsc
 
+import io.kotest.mpp.log
 import mu.KotlinLogging
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicReference
@@ -27,7 +28,12 @@ object SignatureChecker {
     private fun getSignature(body: String): String? {
         val stringToHash = body.split(System.lineSeparator())
             .filter { it.contains("MissionBagPlayer_") }
-            .reduceOrNull { acc, string -> acc + string } ?: return null
+            .reduceOrNull { acc, string -> acc + string }
+        if(stringToHash == null) {
+            logger.warn { "Reduce is null" }
+            logger.warn { body }
+            return null
+        }
         return getSha256(stringToHash)
     }
 
