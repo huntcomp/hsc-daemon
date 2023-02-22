@@ -13,7 +13,7 @@ object SignatureChecker {
             logger.info("Empty file")
             return false
         }
-        val currentSignature = getSignature(body)
+        val currentSignature = getSignature(body) ?: return false
         logger.info("Current signature $currentSignature")
         if (currentSignature == signature.get()) {
             logger.info("Signature has not been changed")
@@ -24,10 +24,10 @@ object SignatureChecker {
         return true
     }
 
-    private fun getSignature(body: String): String {
+    private fun getSignature(body: String): String? {
         val stringToHash = body.split(System.lineSeparator())
             .filter { it.contains("MissionBagPlayer_") }
-            .reduce { acc, string -> acc + string }
+            .reduceOrNull { acc, string -> acc + string } ?: return null
         return getSha256(stringToHash)
     }
 

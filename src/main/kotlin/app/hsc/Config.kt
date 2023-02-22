@@ -5,6 +5,7 @@ import io.github.aakira.napier.Napier
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.gotrue.GoTrue
+import io.kotest.matchers.string.Diff
 import io.ktor.client.engine.apache.*
 import io.ktor.client.engine.cio.*
 
@@ -20,7 +21,7 @@ class Config {
             }
             install(Functions)
         }
-        val sender = AttributesSenderImpl(client)
+        val sender = DiffAttributesSender(AttributesSenderImpl(client))
 //        val tracker = FileTracker()
         return HscContext(
             client,

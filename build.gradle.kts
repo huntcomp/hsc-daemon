@@ -9,13 +9,12 @@ object Versions {
 }
 
 plugins {
-
     kotlin("jvm") version "1.8.10"
     application
 }
 
 group = "app.hsc"
-version = "0.8"
+version = "0.9"
 
 repositories {
     mavenCentral()
@@ -41,6 +40,7 @@ dependencies {
     testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0")
     implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KOTLINX}")
+    implementation("io.github.java-diff-utils:java-diff-utils:4.12")
     implementation("org.awaitility:awaitility:4.2.0")
     implementation("net.java.dev.jna:jna:5.13.0")
     implementation("net.java.dev.jna:jna-platform:5.13.0")

@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import mu.KotlinLogging
+import org.awaitility.Awaitility
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
@@ -48,10 +49,10 @@ class App {
             }
         }
         while (watchingJob.isActive) {
-            runBlocking { delay(60.seconds) }
+            runBlocking { delay(5.seconds) }
             val attributesList = attributesListAtomicReference.getAndUpdate { emptyList() }
             if (attributesList.isNotEmpty()) {
-                val bodyToSend = attributesList.last()
+                val bodyToSend = attributesList.first()
                 runBlocking { context.sender.sendMatch(playerName, bodyToSend) }
             }
         }
