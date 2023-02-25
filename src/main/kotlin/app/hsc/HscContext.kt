@@ -1,9 +1,9 @@
 package app.hsc
 
-import io.github.jan.supabase.SupabaseClient
+import app.hsc.sender.AttributesSender
 
 data class HscContext(
-    val supabase: SupabaseClient,
+    val supabase: Supabase,
     val sender: AttributesSender,
 //    val tracker: FileTracker
 )

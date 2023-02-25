@@ -1,13 +1,13 @@
 package app.hsc
 
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
+import app.hsc.exceptions.GameAlreadyRegisteredHandler
+import app.hsc.exceptions.InvalidJwtHandler
+import app.hsc.sender.AttributesSenderExceptionHandler
+import app.hsc.sender.AttributesSenderImpl
+import app.hsc.sender.DiffAttributesSender
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.gotrue.GoTrue
-import io.kotest.matchers.string.Diff
-import io.ktor.client.engine.apache.*
-import io.ktor.client.engine.cio.*
 
 class Config {
     fun configureContext(): HscContext {
@@ -21,12 +21,16 @@ class Config {
             }
             install(Functions)
         }
-        val sender = DiffAttributesSender(AttributesSenderImpl(client))
-//        val tracker = FileTracker()
+        val supabase = Supabase(client)
+        val sender = DiffAttributesSender(AttributesSenderImpl(supabase))
+        val exceptionHandlers = listOf(
+            GameAlreadyRegisteredHandler,
+            InvalidJwtHandler(supabase)
+        )
+        val senderExceptionHandler = AttributesSenderExceptionHandler(sender, exceptionHandlers)
         return HscContext(
-            client,
-            sender,
-//            tracker
+            supabase,
+            senderExceptionHandler
         )
     }
 }

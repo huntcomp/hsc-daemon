@@ -2,6 +2,7 @@ package app.hsc
 
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.WinReg
+import mu.KotlinLogging
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.regex.Pattern
@@ -13,22 +14,32 @@ private const val INSTALL_PATH_KEY = "InstallPath"
 private const val HUNT_APP_ID = 594650
 
 object AttributesPathRetriever {
-    private val steamDirectory = getSteamDirectory()
-    private val steamLibraries = getSteamLibraries()
 
-    fun getHuntAttributesPath(args: Array<String>): Path =
+    private val logger = KotlinLogging.logger {}
+
+    fun getHuntAttributesPath(args: Array<String>): Path = try {
         Path.of("${getSteamAppDirectory(HUNT_APP_ID)}/user/profiles/default/attributes.xml")
+    } catch (ex: Exception) {
+        logger.error{ ex.message }
+        if(args.isEmpty()) {
+            logger.error { "There is no program arguments and cannot find attributes.xml basing on steam registry entries" }
+            throw ex
+        }
+        logger.info { "Taking attributes from program arguments ${args[0]}" }
+        Path.of(args[0])
+    }
+
 
     private fun getSteamAppDirectory(steamApp: Int) =
-        Files.list(Path.of("$steamLibraries/steamapps/"))
+        Files.list(Path.of("${getSteamLibraries()}/steamapps/"))
             .filter { it.name == "appmanifest_$steamApp.acf" }
             .findFirst()
             .map { getValueFromValveFile("installdir", it) }
-            .map { "$steamLibraries/steamapps/common/$it" }
+            .map { "${getSteamLibraries()}/steamapps/common/$it" }
             .orElseThrow { RuntimeException("Could not find steam libs. Is Steam installed properly") }
 
     private fun getSteamLibraries() =
-        getValueFromValveFile("path", Path.of("$steamDirectory/steamapps/libraryfolders.vdf"))
+        getValueFromValveFile("path", Path.of("${getSteamDirectory()}/steamapps/libraryfolders.vdf"))
 
     private fun getValueFromValveFile(key: String, valveFile: Path): String {
         if (Files.exists(valveFile)) {

@@ -2,14 +2,11 @@ package app.hsc
 
 import com.sun.jna.platform.win32.Advapi32Util.*
 import dev.vishna.watchservice.asWatchChannel
-import io.github.jan.supabase.gotrue.gotrue
-import io.github.jan.supabase.gotrue.providers.Discord
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import mu.KotlinLogging
-import org.awaitility.Awaitility
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
@@ -26,13 +23,7 @@ class App {
         val config = Config()
         val context = config.configureContext()
         logger.info("Start")
-        runBlocking {
-            if (!context.supabase.gotrue.loadFromStorage()) {
-                logger.info("Could not load form storage -> proceeding with login with Discord")
-                context.supabase.gotrue.loginWith(Discord)
-            }
-            logger.info("Logged in with storage")
-        }
+        runBlocking { context.supabase.logIn() }
         val attributesListAtomicReference = AtomicReference<List<String>>(emptyList())
         val watchingJob = GlobalScope.launch {
             val watchChannel = huntAttributesPath.toFile().asWatchChannel()

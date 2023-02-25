@@ -1,10 +1,9 @@
-package app.hsc
+package app.hsc.sender
 
 import com.github.difflib.text.DiffRow
 import com.github.difflib.text.DiffRowGenerator
 import io.ktor.client.statement.*
 import mu.KotlinLogging
-import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
 
