@@ -10,7 +10,7 @@ class InvalidJwtHandler(
 
     private val logger = KotlinLogging.logger {}
     override fun handle(ex: Exception): HandlerResult {
-        if (ex.message?.contains("Invalid JWT") != true) {
+        if (ex.message?.contains("Invalid JWT") == true) {
             runBlocking {
                 logger.warn { "Invalid JWT. Trying to log in again" }
                 supabase.logIn()

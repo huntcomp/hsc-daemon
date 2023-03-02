@@ -25,6 +25,8 @@ class App {
         logger.info("Start")
         runBlocking { context.supabase.logIn() }
         val attributesListAtomicReference = AtomicReference<List<String>>(emptyList())
+
+
         val watchingJob = GlobalScope.launch {
             val watchChannel = huntAttributesPath.toFile().asWatchChannel()
             watchChannel.consumeEach { event ->
@@ -43,7 +45,7 @@ class App {
             runBlocking { delay(5.seconds) }
             val attributesList = attributesListAtomicReference.getAndUpdate { emptyList() }
             if (attributesList.isNotEmpty()) {
-                val bodyToSend = attributesList.first()
+                val bodyToSend = attributesList.last()
                 runBlocking { context.sender.sendMatch(playerName, bodyToSend) }
             }
         }

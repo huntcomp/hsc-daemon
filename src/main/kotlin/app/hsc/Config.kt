@@ -4,6 +4,7 @@ import app.hsc.exceptions.GameAlreadyRegisteredHandler
 import app.hsc.exceptions.InvalidJwtHandler
 import app.hsc.sender.AttributesSenderExceptionHandler
 import app.hsc.sender.AttributesSenderImpl
+import app.hsc.sender.CooldownAttributesSender
 import app.hsc.sender.DiffAttributesSender
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
@@ -22,7 +23,7 @@ class Config {
             install(Functions)
         }
         val supabase = Supabase(client)
-        val sender = DiffAttributesSender(AttributesSenderImpl(supabase))
+        val sender = DiffAttributesSender(CooldownAttributesSender(AttributesSenderImpl(supabase)))
         val exceptionHandlers = listOf(
             GameAlreadyRegisteredHandler,
             InvalidJwtHandler(supabase)
