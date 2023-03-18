@@ -17,7 +17,7 @@ plugins {
 
 
 group = "app.hsc"
-version = "0.11"
+version = "0.12"
 
 repositories {
     mavenCentral()
@@ -83,7 +83,7 @@ launch4j {
 githubRelease {
     token(System.getenv("GITHUB_TOKEN")) // This is your personal access token with Repo permissions
     // You get this from your user settings > developer settings > Personal Access Tokens
-    owner( "hsc") // default is the last part of your group. Eg group: "com.github.breadmoirai" => owner: "breadmoirai"
+    owner("huntcomp") // default is the last part of your group. Eg group: "com.github.breadmoirai" => owner: "breadmoirai"
     repo("hsc-daemon") // by default this is set to your project name
     tagName( "v0.12") // by default this is set to "v${project.version}"
     targetCommitish ("main") // by default this is set to "main"
