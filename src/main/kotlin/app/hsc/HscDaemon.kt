@@ -18,13 +18,15 @@ import kotlin.time.Duration.Companion.seconds
 
 class HscDaemon : CliktCommand() {
 
-    private val huntAttributesPath: Path by option(help="Path to hunt attributes file").path(
-        mustExist = true,
-        canBeDir = false,
-        canBeFile = true,
-        mustBeReadable = true
-    ).default( AttributesPathRetriever.getHuntAttributesPath())
-    private val playerName: String by option(help="Last steam username").default(PlayerNameRetriever.getPlayerName())
+    private val huntAttributesPath: Path by option(help = "Path to hunt attributes file")
+        .path(
+            mustExist = true,
+            canBeDir = false,
+            canBeFile = true,
+            mustBeReadable = true
+        ).default(AttributesPathRetriever.getHuntAttributesPath())
+    private val playerName: String by option(help = "Last steam username")
+        .default(PlayerNameRetriever.getPlayerName())
     private val logger = KotlinLogging.logger {}
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -32,6 +34,7 @@ class HscDaemon : CliktCommand() {
         logger.info("Start")
         logger.info { "Hunt attributes.xml path: $huntAttributesPath" }
         logger.info { "Player name: $playerName" }
+        AutostartAdder.addToAutostart()
         val config = Config()
         val context = config.configureContext()
         runBlocking { context.supabase.logIn() }
