@@ -17,16 +17,11 @@ object AttributesPathRetriever {
 
     private val logger = KotlinLogging.logger {}
 
-    fun getHuntAttributesPath(args: Array<String>): Path = try {
+    fun getHuntAttributesPath(): Path = try {
         Path.of("${getSteamAppDirectory(HUNT_APP_ID)}/user/profiles/default/attributes.xml")
     } catch (ex: Exception) {
-        logger.error{ ex.message }
-        if(args.isEmpty()) {
-            logger.error { "There is no program arguments and cannot find attributes.xml basing on steam registry entries" }
-            throw ex
-        }
-        logger.info { "Taking attributes from program arguments ${args[0]}" }
-        Path.of(args[0])
+        logger.error { "There is no program arguments and cannot find attributes.xml basing on steam registry entries" }
+        throw ex
     }
 
 

@@ -6,6 +6,7 @@ object Versions {
     const val SUPABASE = "0.8.0-alpha-1"
     const val KTOR = "2.2.3"
     const val KOTEST = "5.5.4"
+    const val CLIKT = "3.5.2"
 }
 
 plugins {
@@ -26,6 +27,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.github.ajalt.clikt:clikt:${Versions.CLIKT}")
     implementation("io.kotest:kotest-assertions-core:${Versions.KOTEST}")
     implementation("io.kotest:kotest-framework-engine:${Versions.KOTEST}")
     implementation("io.kotest:kotest-property:${Versions.KOTEST}")
@@ -34,9 +36,6 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt:${Versions.SUPABASE}")
     implementation("io.github.jan-tennert.supabase:gotrue-kt:${Versions.SUPABASE}")
     implementation("io.github.jan-tennert.supabase:functions-kt:${Versions.SUPABASE}")
-    implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
-    implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
-    implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
     implementation("io.github.microutils:kotlin-logging:${Versions.KOTLIN_LOGGING}")
     implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")

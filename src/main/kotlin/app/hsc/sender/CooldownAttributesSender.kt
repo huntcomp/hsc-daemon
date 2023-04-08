@@ -11,6 +11,7 @@ import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
 private val interval = 2.minutes
+
 @OptIn(ExperimentalTime::class)
 class CooldownAttributesSender(
     private val decorate: AttributesSender
@@ -20,7 +21,7 @@ class CooldownAttributesSender(
     private val logger = KotlinLogging.logger {}
     override suspend fun sendMatch(player: String, body: String): HttpResponse? {
         val mark = lastTimeSent.get()
-        if(mark != null && mark.plus(interval).hasNotPassedNow()){
+        if (mark != null && mark.plus(interval).hasNotPassedNow()) {
             val elapsedSeconds = mark.elapsedNow().inWholeSeconds
             val remaining = interval.inWholeSeconds - elapsedSeconds
             logger.info { "Still on cooldown. Remaining $remaining seconds, skipping" }
@@ -28,7 +29,7 @@ class CooldownAttributesSender(
         }
         logger.info { "The cooldown no longer exists, sending" }
         val response = decorate.sendMatch(player, body)
-        if(response != null && response.status.isSuccess()){
+        if (response != null && response.status.isSuccess()) {
             lastTimeSent.set(TimeSource.Monotonic.markNow())
         }
         return response
