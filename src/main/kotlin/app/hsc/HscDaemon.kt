@@ -29,13 +29,13 @@ class HscDaemon : CliktCommand() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun run() {
+        logger.info("Start")
+        logger.info { "Hunt attributes.xml path: $huntAttributesPath" }
+        logger.info { "Player name: $playerName" }
         val config = Config()
         val context = config.configureContext()
-        logger.info("Start")
         runBlocking { context.supabase.logIn() }
         val attributesListAtomicReference = AtomicReference<List<String>>(emptyList())
-
-
         val watchingJob = GlobalScope.launch {
             val watchChannel = huntAttributesPath.toFile().asWatchChannel()
             watchChannel.consumeEach { event ->
