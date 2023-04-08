@@ -13,7 +13,7 @@ class InvalidJwtHandler(
         if (ex.message?.contains("Invalid JWT") == true) {
             runBlocking {
                 logger.warn { "Invalid JWT. Trying to log in again" }
-                supabase.logIn()
+                supabase.resolveInvalidJWTError()
             }
             return HandlerResult.RETRY
         }
