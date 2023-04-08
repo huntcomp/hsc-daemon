@@ -18,24 +18,26 @@ import kotlin.time.Duration.Companion.seconds
 
 class HscDaemon : CliktCommand() {
 
-    private val huntAttributesPath: Path by option(help="Path to hunt attributes file").path(
-        mustExist = true,
-        canBeDir = false,
-        canBeFile = true,
-        mustBeReadable = true
-    ).default( AttributesPathRetriever.getHuntAttributesPath())
-    private val playerName: String by option(help="Last steam username").default(PlayerNameRetriever.getPlayerName())
+    private val huntAttributesPath: Path by option(help = "Path to hunt attributes file")
+        .path(
+            mustExist = true,
+            canBeDir = false,
+            canBeFile = true,
+            mustBeReadable = true
+        ).default(AttributesPathRetriever.getHuntAttributesPath())
+    private val playerName: String by option(help = "Last steam username")
+        .default(PlayerNameRetriever.getPlayerName())
     private val logger = KotlinLogging.logger {}
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun run() {
+        logger.info { "Hunt attributes path: $huntAttributesPath" }
+        logger.info { "Player name: $playerName" }
         val config = Config()
         val context = config.configureContext()
         logger.info("Start")
         runBlocking { context.supabase.logIn() }
         val attributesListAtomicReference = AtomicReference<List<String>>(emptyList())
-
-
         val watchingJob = GlobalScope.launch {
             val watchChannel = huntAttributesPath.toFile().asWatchChannel()
             watchChannel.consumeEach { event ->

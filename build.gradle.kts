@@ -18,7 +18,7 @@ plugins {
 
 
 group = "app.hsc"
-version = "0.12"
+version = "0.13"
 
 repositories {
     mavenCentral()
@@ -37,6 +37,9 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:gotrue-kt:${Versions.SUPABASE}")
     implementation("io.github.jan-tennert.supabase:functions-kt:${Versions.SUPABASE}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.KOTLINX_SERIALIZATION_JSON}")
+    implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
+    implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
+    implementation("io.ktor:ktor-client-apache:${Versions.KTOR}")
     implementation("io.github.microutils:kotlin-logging:${Versions.KOTLIN_LOGGING}")
     implementation("org.slf4j:slf4j-simple:${Versions.SLF4J}")
     testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0")
