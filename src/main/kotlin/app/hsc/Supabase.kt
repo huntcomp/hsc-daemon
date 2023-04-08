@@ -14,9 +14,11 @@ class Supabase(
         if (client.gotrue.loadFromStorage()) {
             return client.gotrue.sessionStatus.value
         }
+
         client.gotrue.loginWith(Discord)
         return client.gotrue.sessionStatus.value
     }
+
 
     suspend fun loadMatch(body: String, player: String) = client.functions(
         function = "load-match",

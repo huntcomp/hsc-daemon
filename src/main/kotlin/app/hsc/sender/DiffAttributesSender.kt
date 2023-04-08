@@ -8,17 +8,16 @@ import java.util.concurrent.atomic.AtomicReference
 
 
 class DiffAttributesSender(
-    private val decorate : AttributesSender
+    private val decorate: AttributesSender
 ) : AttributesSender {
 
     private val logger = KotlinLogging.logger {}
-    private val oldString  = AtomicReference("")
+    private val oldString = AtomicReference("")
 
     override suspend fun sendMatch(player: String, body: String): HttpResponse? {
         try {
             logBody(body)
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             println(ex)
             println("Continuing")
         }
@@ -32,7 +31,7 @@ class DiffAttributesSender(
             .oldTag { _: Boolean? -> "~" }
             .newTag { _: Boolean? -> "**" }
             .build()
-        val oldLines = oldString.getAndUpdate{
+        val oldLines = oldString.getAndUpdate {
             return@getAndUpdate body
         }.split(System.lineSeparator())
 
@@ -45,7 +44,7 @@ class DiffAttributesSender(
         logger.info("|original|new|")
         logger.info("|--------|---|")
         for (row in rows) {
-            if(row.oldLine != row.newLine) {
+            if (row.oldLine != row.newLine) {
                 logger.info("|" + row.oldLine + "|" + row.newLine + "|")
             }
         }

@@ -7,12 +7,7 @@ object PlayerNameRetriever {
     const val STEAM_USER_REGISTRY = "SOFTWARE\\Valve\\Steam"
     const val LAST_NAME_RECORD_NAME = "LastGameNameUsed"
 
-    fun getPlayerName(args: Array<String>): String = getSteamName() ?: getUserDefinedPlayerName(args)
-
-    private fun getUserDefinedPlayerName(args: Array<String>) =
-        if (args.size < 2)
-            throw RuntimeException("No registry '$STEAM_USER_REGISTRY' with value in '$LAST_NAME_RECORD_NAME'")
-        else args[1]
+    fun getPlayerName(): String = getSteamName() ?: throw RuntimeException("No registry '$STEAM_USER_REGISTRY' with value in '$LAST_NAME_RECORD_NAME'")
 
     private fun getSteamName(): String? =
         if (registryExists())

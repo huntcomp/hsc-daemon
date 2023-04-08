@@ -1,5 +1,9 @@
 package app.hsc
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.path
 import com.sun.jna.platform.win32.Advapi32Util.*
 import dev.vishna.watchservice.asWatchChannel
 import io.kotest.common.runBlocking
@@ -12,14 +16,19 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.seconds
 
-class App {
+class HscDaemon : CliktCommand() {
 
+    private val huntAttributesPath: Path by option(help="Path to hunt attributes file").path(
+        mustExist = true,
+        canBeDir = false,
+        canBeFile = true,
+        mustBeReadable = true
+    ).default( AttributesPathRetriever.getHuntAttributesPath())
+    private val playerName: String by option(help="Last steam username").default(PlayerNameRetriever.getPlayerName())
     private val logger = KotlinLogging.logger {}
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun run(args: Array<String>) {
-        val huntAttributesPath = AttributesPathRetriever.getHuntAttributesPath(args)
-        val playerName = PlayerNameRetriever.getPlayerName(args)
+    override fun run() {
         val config = Config()
         val context = config.configureContext()
         logger.info("Start")
